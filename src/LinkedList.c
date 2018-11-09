@@ -6,7 +6,7 @@
 
 static Node* getNode(LinkedList* this, int nodeIndex);
 static int addNode(LinkedList* this, int nodeIndex,void* pElement);
-static Node* newNode(void);
+//static Node* newNode(void);
 
 /** \brief Crea un nuevo Node en memoria de manera dinamica
  *
@@ -14,6 +14,7 @@ static Node* newNode(void);
  *  \return Node* Retorna (NULL) en el caso de no conseguir espacio en memoria
  *                      o el puntero al espacio reservado
  */
+ /*
 static Node* newNode(void)
 {
     Node* this;
@@ -21,7 +22,7 @@ static Node* newNode(void)
 
     return this;
 }
-
+*/
 /** \brief Crea un nuevo LinkedList en memoria de manera dinamica
  *
  *  \param void
@@ -121,20 +122,28 @@ Node* test_getNode(LinkedList* this, int nodeIndex)
 static int addNode(LinkedList* this, int nodeIndex,void* pElement)
 {
     int returnAux = -1;
-    Node* newNode = newNode();
-    Node* auxNode = newNode();
+    Node* newNode = (Node *)malloc(sizeof(Node));
+    Node* auxNode = (Node *)malloc(sizeof(Node));
 
     if(this != NULL)
     {
-        if(nodeIndex > 0 && nodeIndex <= ll_len(this))
+        if(ll_len(this) == 0 && nodeIndex >= 0)
         {
-            auxNode = getNode(this, nodeIndex);
             newNode->pElement = pElement;
-            newNode->pNextNode = auxNode;
-            auxNode = getNode(this, nodeIndex - 1);
-            auxNode->pNextNode = newNode;
-            returnAux = 0;
+            newNode->pNextNode = NULL;
+            this->size++;
+            this->pFirstNode = newNode;
         }
+        else
+        {
+            auxNode = getNode(this, nodeIndex - 1);
+            newNode->pElement = pElement;
+            newNode->pNextNode = NULL;
+            auxNode->pNextNode = newNode;
+            printf("%d", this->size);
+            this->size++;
+        }
+        returnAux = 0;
     }
     return returnAux;
 }
