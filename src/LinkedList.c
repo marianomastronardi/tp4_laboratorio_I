@@ -6,6 +6,21 @@
 
 static Node* getNode(LinkedList* this, int nodeIndex);
 static int addNode(LinkedList* this, int nodeIndex,void* pElement);
+static Node* newNode(void);
+
+/** \brief Crea un nuevo Node en memoria de manera dinamica
+ *
+ *  \param void
+ *  \return Node* Retorna (NULL) en el caso de no conseguir espacio en memoria
+ *                      o el puntero al espacio reservado
+ */
+static Node* newNode(void)
+{
+    Node* this;
+    this = (Node *)malloc(sizeof(Node));
+
+    return this;
+}
 
 /** \brief Crea un nuevo LinkedList en memoria de manera dinamica
  *
@@ -106,8 +121,8 @@ Node* test_getNode(LinkedList* this, int nodeIndex)
 static int addNode(LinkedList* this, int nodeIndex,void* pElement)
 {
     int returnAux = -1;
-    Node* newNode = NULL;
-    Node* auxNode = NULL;
+    Node* newNode = newNode();
+    Node* auxNode = newNode();
 
     if(this != NULL)
     {
