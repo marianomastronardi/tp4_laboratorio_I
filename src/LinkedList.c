@@ -14,13 +14,13 @@ static int addNode(LinkedList* this, int nodeIndex,void* pElement);
  *  \return Node* Retorna (NULL) en el caso de no conseguir espacio en memoria
  *                      o el puntero al espacio reservado
  */
- /*
+/*
 static Node* newNode(void)
 {
-    Node* this;
-    this = (Node *)malloc(sizeof(Node));
+   Node* this;
+   this = (Node *)malloc(sizeof(Node));
 
-    return this;
+   return this;
 }
 */
 /** \brief Crea un nuevo LinkedList en memoria de manera dinamica
@@ -71,24 +71,26 @@ int ll_len(LinkedList* this)
 static Node* getNode(LinkedList* this, int nodeIndex)
 {
     Node* pNode = NULL;
-    int longitud = ll_len(this);
 
-    if(nodeIndex >= 0 && nodeIndex < longitud && this != NULL)
+    if(this != NULL)
     {
-        for(int i = 0; i < longitud; i++)
+        if(nodeIndex >= 0 && nodeIndex < ll_len(this))
         {
-            if(pNode == NULL)
+            for(int i = 0; i < ll_len(this); i++)
             {
-                pNode = this->pFirstNode;
-            }
-            else
-            {
-                pNode = pNode->pNextNode;
-            }
+                if(pNode == NULL)
+                {
+                    pNode = this->pFirstNode;
+                }
+                else
+                {
+                    pNode = pNode->pNextNode;
+                }
 
-            if(i == nodeIndex)
-            {
-                break;
+                if(i == nodeIndex)
+                {
+                    break;
+                }
             }
         }
     }
@@ -122,25 +124,48 @@ Node* test_getNode(LinkedList* this, int nodeIndex)
 static int addNode(LinkedList* this, int nodeIndex,void* pElement)
 {
     int returnAux = -1;
-    Node* newNode = (Node *)malloc(sizeof(Node));
-    Node* auxNode = (Node *)malloc(sizeof(Node));
 
     if(this != NULL)
     {
-        if(ll_len(this) == 0 && nodeIndex >= 0)
+        Node* newNode = (Node *)malloc(sizeof(Node));
+        Node* previousNode = (Node *)malloc(sizeof(Node));
+        Node* nextNode = (Node *)malloc(sizeof(Node));
+
+        if(nodeIndex == 0)
         {
-            newNode->pElement = pElement;
-            newNode->pNextNode = NULL;
+            if(ll_len(this) == 0)
+            {
+                newNode->pElement = pElement;
+                newNode->pNextNode = NULL;
+            }
+            else
+            {
+                nextNode = this->pFirstNode;
+                newNode->pElement = pElement;
+                newNode->pNextNode = nextNode;
+            }
             this->size++;
             this->pFirstNode = newNode;
         }
         else
         {
-            auxNode = getNode(this, nodeIndex - 1);
-            newNode->pElement = pElement;
-            newNode->pNextNode = NULL;
-            auxNode->pNextNode = newNode;
-            printf("%d", this->size);
+            previousNode = getNode(this, nodeIndex - 1);
+            if(nodeIndex == ll_len(this) - 1)
+            {
+                //ES EL ULTIMO
+                newNode->pElement = pElement;
+                newNode->pNextNode = NULL;
+                previousNode->pNextNode = newNode;
+            }
+            else
+            {
+                nextNode = getNode(this, nodeIndex + 1);
+                newNode->pElement = pElement;
+                newNode->pNextNode = nextNode;
+                previousNode->pNextNode = newNode;
+            }
+
+            //printf("%d", this->size);
             this->size++;
         }
         returnAux = 0;
