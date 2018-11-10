@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../testing/inc/Employee.h"
 #include "../inc/LinkedList.h"
 
 
@@ -261,6 +262,7 @@ int ll_set(LinkedList* this, int index,void* pElement)
             Node* pNode = (Node*)malloc(sizeof(Node*));
             pNode = getNode(this, index);
             pNode->pElement = pElement;
+
             returnAux = 0;
         }
     }
@@ -634,45 +636,51 @@ int ll_sort(LinkedList* this, int (*pFunc)(void*,void*), int order)
     int returnAux =-1;
     int swapeo = 0;
 
-    if(this != NULL)
+    if(this != NULL && (*pFunc) != NULL && (order == 1 || order == 0))
     {
         if(ll_len(this) > 1)
         {
             Node* NodeA = (Node*)malloc(sizeof(Node*));
             Node* NodeB = (Node*)malloc(sizeof(Node*));
+            void* EmployeeAux = (void*)malloc(sizeof(void*));
 
-            for(int i = 0; i < ll_len(this) - 2; i++)
+            for(int i = 0; i < ll_len(this) - 1; i++)
             {
-                NodeA = getNode(this, i);
 
                 for(int j = i + 1; j < ll_len(this); j++)
                 {
+                    NodeA = getNode(this, i);
                     NodeB = getNode(this, j);
 
                     if(order == 0)
                     {
                         //DESCENDENTE
-                        swapeo = pFunc(NodeA, NodeB);
-                        printf("swap desc %d", i);
+                        swapeo = pFunc((void*)NodeA->pElement, (void*)NodeB->pElement);
+
                         if(swapeo == -1)
                         {
-
+                            EmployeeAux = NodeA->pElement;
+                            ll_set(this, i, NodeB->pElement);
+                            ll_set(this, j, EmployeeAux);
                         }
                     }
                     else
                     {
                         //ASCENDENTE
-                        swapeo = pFunc(NodeA, NodeB);
-                        printf("swap asc %d", i);
+                        swapeo = pFunc((void*)NodeA->pElement, (void*)NodeB->pElement);
+
                         if(swapeo == 1)
                         {
-
+                            EmployeeAux = NodeA->pElement;
+                            ll_set(this, i, NodeB->pElement);
+                            ll_set(this, j, EmployeeAux);
                         }
 
                     }
                 }
             }
         }
+        returnAux = 0;
     }
     return returnAux;
 }
